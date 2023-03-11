@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from PIL import Image, ImageChops
 
 # Send an HTTP request to the friend's shopping mall website and extract the title and product image URL
-url = 'https://www.friendsshoppingmall.com/product1'
-response = requests.get(url)
+url1 = 'https://www.friendsshoppingmall.com/product1'
+response = requests.get(url1)
 
 # Parse the HTML content of the page using BeautifulSoup
 soup = BeautifulSoup(response.content, 'html.parser')
@@ -15,7 +15,14 @@ soup = BeautifulSoup(response.content, 'html.parser')
 title = soup.find('h1', class_='product-title').text
 
 # Extract the URL of the product image
-img_url = soup.find('img', class_='product-image')['src']
+img_url1 = soup.find('img', class_='product-image')['src']
+
+# Load the image from the friend's website
+response1 = requests.get(img_url1)
+img_data1 = response1.content
+img1 = Image.open(BytesIO(img_data1))
+
+
 
 # Send an HTTP request to the other shopping mall website's search page and compare the product images
 search_url = 'https://www.othershoppingmall.com/search?q=' + title
@@ -44,6 +51,23 @@ for result in soup.find_all('a', class_='product-link'):
         # The images are the same
         print('Found a matching product on another shopping mall')
         break
+
+
+
+    
+# Load the image from the shopping mall website
+response1 = requests.get(img_url)
+img_data1 = response1.content
+img1 = Image.open(BytesIO(img_data1))
+
+
+
+# Download the friend's product image
+img_data = requests.get(img_url).content
+with open('product1.jpg', 'wb') as f:
+    f.write(img_data)
+
+
 
         
 # Extract the price of the friend's product
